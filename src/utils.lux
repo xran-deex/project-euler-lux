@@ -1,0 +1,20 @@
+(;module:
+  lux
+  lux/data/text/format
+  (lux (data ["text" text Monoid<Text>]))
+  (lux
+   (data/struct ["list" list Fold<List> Functor<List>]))
+  )
+
+(def: #export empty "")
+(def: #export newline "\n")
+
+(def: #export (join ls)
+  (-> (List Text) Text)
+  (fold append empty (list;reverse ls)))
+
+(def: #export (printList ls)
+  {#;doc (doc "Prints each item of the given list on a separate line."
+              (printList aList))}
+  (-> (List Text) Text)
+  (fold append empty (list;interpose newline ls)))

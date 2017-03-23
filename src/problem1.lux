@@ -1,0 +1,23 @@
+(;module:
+  lux
+  lux/codata/struct/stream
+  lux/codata/io
+  lux/control/monad
+  lux/data/text/format
+  (lux (data [number Codec<Text,Int>]))
+  (lux (data ["text" text Monoid<Text>]))
+  (lux
+   (data/struct ["list" list Fold<List> Functor<List>]))
+  (lux [cli #+ program:])
+  utils
+  )
+
+(def: #export problem1
+  (io
+   (exec
+     (let [
+        m3 (fold i.+ 0 (take-while (i.< 1000) (iterate (i.+ 3) 3)))
+        m5 (fold i.+ 0 (take-while (i.< 1000) (iterate (i.+ 5) 5)))
+        m15 (fold i.+ 0 (take-while (i.< 1000) (iterate (i.+ 15) 15)))
+        ]
+    (log! (join (list "The sum of all multiples of 3 and 5 below 1000 is " (%i (i.- m15 (i.+ m5 m3))))))))))

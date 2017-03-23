@@ -1,0 +1,38 @@
+(;module: {#;doc "Euler Project solutions with Lux"}
+  lux
+  lux/codata/struct/stream
+  lux/codata/io
+  lux/control/monad
+  lux/data/text/format
+  (lux (data ["text" text Monoid<Text>]))
+  (lux
+   (data/struct ["list" list Fold<List> Functor<List>]))
+  (lux [cli #+ program:])
+  utils
+  )
+
+(def: (addIfEven [x y] prev)
+  (-> [Int Int] Int Int)
+  (i.+ (if (i.even? x)
+         x
+         0) prev))
+
+(def: threshold 4_000_000)
+
+(def: (lessThanThreshold [x y])
+  (-> [Int Int] Bool)
+  (i.< threshold x))
+
+(def: (fib [a b])
+  (-> [Int Int] [[Int Int] [Int Int]])
+  [[b (i.+ a b)] [a b]])
+
+(def: #export problem2
+  (io
+   (exec
+     (let [
+           fibStream (unfold fib [1 1])
+           fibs (take-while lessThanThreshold fibStream)
+           evensSum (fold addIfEven 0 fibs)
+           ]
+       (log! (join (list "Sum of even fibonnaci numbers less than " (%i threshold) " is " (%i evensSum))))))))

@@ -1,0 +1,37 @@
+(;module: {#;doc "Euler Project solutions with Lux"}
+  lux
+  lux/codata/io
+  (lux [cli #+ program:])
+  problem1
+  problem2
+  utils
+  )
+
+(def: availableProblems
+  (list "problem2" "problem1"))
+
+(def: (printAvailableProblems unit)
+  (log! (printList availableProblems)))
+
+(def: printUsage
+  (io
+   (exec
+    (log! "Usage: [problem] the name of the Euler problem to run.\n")
+    (log! "Available problems:")
+    (printAvailableProblems []))))
+
+(program: args
+  (case args
+    #;Nil
+    printUsage
+
+    (#;Cons arg rest)
+    (case arg
+      "problem1"
+      problem1
+
+      "problem2"
+      problem2
+
+      _
+      (io (log! "Problem not available")))))
