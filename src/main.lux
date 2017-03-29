@@ -4,11 +4,12 @@
   (lux [cli #+ program:])
   problem1
   problem2
+  problem3
   utils
   )
 
 (def: availableProblems
-  (list "problem2" "problem1"))
+  (list "problem3" "problem2" "problem1"))
 
 (def: (printAvailableProblems unit)
   (log! (printList availableProblems)))
@@ -32,6 +33,9 @@
 
       "problem2"
       problem2
+
+      "problem3"
+      problem3
 
       _
       (io (log! "Problem not available")))))

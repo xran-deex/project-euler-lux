@@ -1,0 +1,67 @@
+(;module: {#;doc "Euler Project solutions with Lux"}
+  lux
+  lux/codata/io
+  lux/control/monad
+  lux/data/text/format
+  (lux (data [number Codec<Text,Int>]))
+  (lux (data ["text" text Monoid<Text>]))
+  lux/math
+  (lux
+   (data/struct ["list" list Fold<List> Functor<List>]))
+  utils
+  )
+
+## the number for which we are searching for its largest prime factor
+(def: number Int 600851475143)
+
+## Given an Int, returns the integer floor of its square root
+(def: (sqrtInt int)
+  (-> Int Int)
+  (real-to-int (floor (sqrt (int-to-real int)))))
+
+## Returns true if the given num is a prime
+(def: (isPrime' cur num)
+  (-> Int Int Bool)
+  (if (i.> (sqrtInt num) cur)
+    true
+    (if (i.= 0 (i.% cur num))
+      false
+      (isPrime' num (i.+ 1 cur)))))
+
+## Always start the current value at 2
+(def: isPrime (isPrime' 2))
+
+## Finds the next prime starting at the given Int
+(def: (nextPrime cur)
+  (-> Int Int)
+  (if (isPrime cur)
+    cur
+    (nextPrime (i.inc cur))))
+
+## Returns a list of prime factors for the given num
+(def: (primeFactors ls cur num)
+  (-> (List Int) Int Int (List Int))
+  (if (i.> num cur)
+    ls
+    (if (i.= 0 (i.% cur num))
+      (primeFactors (#;Cons cur ls) (nextPrime (i.inc cur)) (i./ cur num))
+      (primeFactors ls (nextPrime (i.inc cur)) num))))
+
+## Start with an empty list and start at 2
+(def: primeFactors' (primeFactors (list) 2))
+
+## Returns the head of the list or 0 if empty
+(def: (head' ls)
+  (-> (List Int) Int)
+  (case (list;head ls)
+    (#;Some int)
+    int
+
+    #;None
+    0))
+
+(def: #export problem3
+  (-> (IO Unit))
+  (io
+   (exec
+    (log! (join (list "The largest prime factor of " (%i number) " is " (%i (head' (primeFactors' number)))))))))
