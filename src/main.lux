@@ -1,15 +1,17 @@
 (;module: {#;doc "Euler Project solutions with Lux"}
   lux
   lux/codata/io
+  (lux (data [number Codec<Text,Int>]))
   (lux [cli #+ program:])
   problem1
   problem2
   problem3
+  problem4
   utils
   )
 
 (def: availableProblems
-  (list "problem3" "problem2" "problem1"))
+  (list "problem4" "problem3" "problem2" "problem1"))
 
 (def: (printAvailableProblems unit)
   (log! (printList availableProblems)))
@@ -36,6 +38,9 @@
 
       "problem3"
       problem3
+
+      "problem4"
+      problem4
 
       _
       (io (log! "Problem not available")))))

@@ -1,0 +1,84 @@
+(;module: {#;doc "Euler Project solutions with Lux"}
+  lux
+  lux/codata/io
+  lux/control/monad
+  lux/data/text/format
+  lux/data/char
+  (lux (data [number Codec<Text,Int>]))
+  (lux (data ["text" text Monoid<Text>]))
+  lux/math
+  (lux
+   (data/struct ["list" list Fold<List> Functor<List>]))
+  utils
+  )
+
+(def: msg Text "The largest palindrome made from the product of two 3-digit numbers is ")
+
+## Returns true if both maybe chars are equal
+(def: (checkChars char1 char2)
+  (-> (Maybe Char) (Maybe Char) Bool)
+  (case char1
+    (#;Some char1')
+      (case char2
+        (#;Some char2')
+        (:: Eq<Char> = char1' char2')
+
+        _
+        false)
+      _
+      false))
+
+## Returns true if the string is a palidrome
+(def: (stringIsPal' idx str)
+  (-> Nat Text Bool)
+  (let [sz (text;size str)]
+    ## if the index is greater than half the size of the string,
+    ## then we;ve checked all chars so this is a palindrome
+    (if (n.< (n./ +2 sz) idx)
+      ## check the chars at index and size - index for equality
+      (if (checkChars (text;at idx str) (text;at (n.- idx (n.dec sz)) str))
+        (stringIsPal' (n.inc idx) str)
+        false
+        )
+      true)))
+
+## Starts checking the string at index 0
+(def: stringIsPal (stringIsPal' +0))
+
+## Returns true if the number is a palindrome
+(def: (isPalindrome num)
+  (-> Int Bool)
+  (let [res (encode num)]
+    (stringIsPal res)))
+
+## The function that does the looping work
+## Loops over both intervals (100-999)
+(def: (palindromes' first second res)
+  (-> Int Int (List Int) (List Int))
+  (if (i.> 999 first)
+    res
+    (if (i.> 999 second)
+      (palindromes' (i.inc first) 100 res)
+      (let [prod (i.* first second)]
+        (if (isPalindrome prod)
+          (palindromes' first (i.inc second) (#;Cons prod res))
+          (palindromes' first (i.inc second) res))))))
+
+## Start each counter at 100 and an empty list
+(def: palindromes (palindromes' 100 100 (list)))
+
+## Sorts the list of palindromes descending then takes the head
+(def: largestPalindrome
+  (-> Int)
+  (case (list;head (list;sort i.> palindromes))
+    (#;Some num)
+    num
+
+    #;None
+    -1))
+
+(def: #export problem4
+  (-> (IO Unit))
+  (io
+   (exec
+     (log! (join (list msg (%i largestPalindrome)))))))
