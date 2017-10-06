@@ -7,11 +7,12 @@
   problem2
   problem3
   problem4
+  problem5
   utils
   )
 
 (def: availableProblems
-  (list "problem4" "problem3" "problem2" "problem1"))
+  (list "problem5" "problem4" "problem3" "problem2" "problem1"))
 
 (def: (printAvailableProblems unit)
   (log! (printList availableProblems)))
@@ -41,6 +42,9 @@
 
       "problem4"
       problem4
+
+      "problem5"
+      problem5
 
       _
       (io (log! "Problem not available")))))

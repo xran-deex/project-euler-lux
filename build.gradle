@@ -1,0 +1,20 @@
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.github.luxlang:luxc-jvm:0.5.0'
+        classpath 'com.github.luxlang:stdlib:0.5.0'
+        classpath 'com.github.luxlang:LuxGradlePlugin:0.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'com.github.luxlang.lux'
+
+lux {
+  program = 'main'
+  sourcePath = 'src'
+  build = "release"
+}

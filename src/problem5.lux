@@ -1,0 +1,39 @@
+(;module: {#;doc "Euler Project solutions with Lux"}
+  lux
+  lux/codata/io
+  lux/control/monad
+  lux/data/text/format
+  lux/data/char
+  (lux (data [number Codec<Text,Int>]))
+  (lux (data ["text" text Monoid<Text>]))
+  lux/math
+  (lux
+   (data/struct ["list" list Fold<List> Functor<List>]))
+  utils
+  )
+
+(def: msg Text "The smallest positive integer evenly divisible by all the numbers from 1 to 20 is ")
+
+(def: (isDiv num)
+  (-> Nat Bool)
+  (loop [num num
+         acc +1]
+    (if (n.> +20 acc)
+      true
+      (if (n.= +0 (n.% acc num))
+        (recur num (n.inc acc))
+        false))))
+
+(def: (divisible curVal)
+  (-> Nat Nat)
+  (if (isDiv curVal)
+    ## found it
+    curVal
+    ## no need to test all the numbers, so skip by 20
+    (divisible (n.+ +20 curVal))))
+
+(def: #export problem5
+  (-> (IO Unit))
+  (io
+   (exec
+     (log! (join (list msg (%n (divisible +20))))))))
